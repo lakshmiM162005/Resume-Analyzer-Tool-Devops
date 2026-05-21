@@ -14,10 +14,16 @@ import streamlit as st
 
 load_dotenv()
 
-os.environ['GOOGLE_API_KEY'] = os.getenv('gemini_key')
+# os.environ['GOOGLE_API_KEY'] = os.getenv('gemini_key')
+google_api_key = os.getenv("gemini_key")
 
-# llm = "google_genai:gemini-2.5-flash-lite"
-llm = "google_genai:gemini-2.0-flash"
+if google_api_key:
+    os.environ["GOOGLE_API_KEY"] = google_api_key
+else:
+    st.error("Gemini API key not found")
+
+llm = "google_genai:gemini-2.5-flash-lite"
+# llm = "google_genai:gemini-2.0-flash"
 
 search = DuckDuckGoSearchRun()
 wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())

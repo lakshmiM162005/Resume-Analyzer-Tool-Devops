@@ -11,3 +11,4 @@ ddgs
 dotenv==0.9.9
 langchain-community==0.4.1
 langchain==1.2.15
+pytest
