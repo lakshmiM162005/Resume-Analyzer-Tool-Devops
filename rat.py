@@ -22,8 +22,9 @@ if google_api_key:
 else:
     st.error("Gemini API key not found")
 
-llm = "google_genai:gemini-2.5-flash-lite"
-# llm = "google_genai:gemini-2.0-flash"
+# llm = "google_genai:gemini-2.5-flash-lite"
+llm = "google_genai:gemini-2.0-flash"
+
 
 search = DuckDuckGoSearchRun()
 wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())
@@ -32,9 +33,9 @@ sked_agent = create_agent(
     model= llm,
     tools=[wikipedia],
     middleware=[
-        ModelRetryMiddleware(max_retries=3),
+        ModelRetryMiddleware(max_retries=1),
         ToolRetryMiddleware(
-            max_retries=3,
+            max_retries=1,
             retry_on=(ConnectionError, TimeoutError),
         ),
     ],
@@ -60,9 +61,9 @@ exp_agent = create_agent(
     model=llm,
     tools=[search],
     middleware=[
-        ModelRetryMiddleware(max_retries=2),
+        ModelRetryMiddleware(max_retries=1),
         ToolRetryMiddleware(
-            max_retries=3,
+            max_retries=1,
             retry_on=(ConnectionError, TimeoutError),
         ),
     ],
@@ -90,9 +91,9 @@ sal_agent = create_agent(
     model=llm,
     tools=[search],
     middleware=[
-        ModelRetryMiddleware(max_retries=2),
+        ModelRetryMiddleware(max_retries=1),
         ToolRetryMiddleware(
-            max_retries=3,
+            max_retries=1,
             retry_on=(ConnectionError, TimeoutError),
         ),
     ],
@@ -181,9 +182,9 @@ sup_agent = create_agent(
     tools=[call_skill_edu_matcher, call_exp_matcher, call_sal_matcher],
     response_format=ResumeDecision,
     middleware=[
-        ModelRetryMiddleware(max_retries=2),
+        ModelRetryMiddleware(max_retries=1),
         ToolRetryMiddleware(
-            max_retries=3,
+            max_retries=1,
             retry_on=(ConnectionError, TimeoutError),
         ),
     ],
