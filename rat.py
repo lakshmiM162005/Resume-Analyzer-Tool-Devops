@@ -11,19 +11,22 @@ from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, Field
 import tempfile
 import streamlit as st
+from langchain_groq import ChatGroq
 
 load_dotenv()
 
 # os.environ['GOOGLE_API_KEY'] = os.getenv('gemini_key')
-google_api_key = os.getenv("gemini_key")
+# google_api_key = os.getenv("gemini_key")
 
-if google_api_key:
-    os.environ["GOOGLE_API_KEY"] = google_api_key
-else:
-    st.error("Gemini API key not found")
+os.environ["GROQ_API_KEY"] = os.getenv("groq_api_key")
+
+
 
 # llm = "google_genai:gemini-2.5-flash-lite"
-llm = "google_genai:gemini-2.0-flash"
+# llm = "google_genai:gemini-2.0-flash"
+llm = ChatGroq(
+    model_name="llama-3.3-70b-versatile"
+)
 
 
 search = DuckDuckGoSearchRun()
@@ -224,7 +227,7 @@ def extract_text_from_uploaded_pdf(uploaded_file):
             os.remove(temp_path)
 
 
-st.title("Resume Analysis Tool")
+st.title("🤖 AI Resume Analysis Tool")
 
 resume_file = st.file_uploader("Upload Resume PDF", type="pdf")
 jd_file = st.file_uploader("Upload Job Description PDF", type="pdf")
@@ -242,12 +245,29 @@ if resume_file and jd_file:
             ]
         })
 
+        result = response["structured_response"]
+
+        st.subheader("📄 Resume Screening Report")
+
+        st.success("Analysis Completed Successfully ✅")
+
+        st.markdown("## 🎯 Final Decision")
+        st.write(result.decision)
+
+        st.markdown("## 📊 Overall Score")
+        st.write(f"{result.score}/100")
+
         result = response["messages"][-1].content
+        parts = result.split("NOTES:")
 
-        st.write("## Resume Screening Result")
-        st.write(result)
+        details = parts[0]
+        notes = parts[1] if len(parts) > 1 else ""
 
+        st.markdown("## 💰 Salary Analysis")
+        st.info(details)
 
+        st.markdown("## 📝 Detailed Notes")
+        st.write(notes)
 #         try:
 #     response = sup_agent.invoke({
 #         "messages": [
