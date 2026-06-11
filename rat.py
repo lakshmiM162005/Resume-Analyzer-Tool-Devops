@@ -246,7 +246,7 @@ if resume_file and jd_file:
         })
 
         st.write(response)
-        st.stop()
+        result = response["messages"][-1].content
 
         st.subheader("📄 Resume Screening Report")
 
