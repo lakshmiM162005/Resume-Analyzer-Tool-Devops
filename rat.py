@@ -245,7 +245,13 @@ if resume_file and jd_file:
             ]
         })
 
-        result = response["structured_response"]
+        st.write(response.keys())
+        st.write(response)
+
+        if "structured_response" in response:
+            result = response["structured_response"]
+        else:
+            result = response["messages"][-1].content
 
         st.subheader("📄 Resume Screening Report")
 
